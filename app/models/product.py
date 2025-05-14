@@ -6,6 +6,7 @@ from config import headers
 from bs4 import BeautifulSoup
 from app.models.review import Review
 from app.utils import extract
+
 class Product:
     def __init__(self, product_id, reviews=[], product_name="", stats={}):
         self.product_id = product_id
