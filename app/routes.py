@@ -20,26 +20,26 @@ def extract():
     if form.validate():
         product_id = form.product_id.data
         product = Product(product_id)
-        if if_not_exists():
-            form.product_id.errors.append()
+        if_not_exists = product.if_not_exists()
+        if if_not_exists:
+            form.product_id.errors.append(if_not_exists)
             return render_template("extract.html", form=form)
         product.extract_reviews().extract_name().calculate_stats()
         product.export_reviews()
         product.export_info()
         return redirect(url_for('product', product_id=product_id))
-    else: 
+    else:
         return render_template("extract.html", form=form)
 
 @app.route("/products")
 def products():
     products_files = os.listdir("./app/data/products")
+    products= []
     for filename in products_files:
         with open(f"./app/data/products/{filename}", "r", encoding="UTF-8") as jf:
             product = Product(filename.split(".")[0])
-            product.info_from_dict()
+            product.info_from_dict(json.load(jf))
             products.append(product)
-
-
     return render_template("products.html", products=products)
 
 @app.route("/product/<product_id>")
